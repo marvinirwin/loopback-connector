@@ -217,6 +217,11 @@ describe('sql connector', function() {
     });
   });
 
+  it('builds where and ignores invalid clauses in and/or', function() {
+    var where = connector.buildWhere('customer', {name: 'icecream', or: [{notAColumnName: ''}, {notAColumnNameEither: ''}]});
+    expect(where.sql.endsWith(' AND ')).and.to.equal(false);
+  });
+
   it('builds order by with one field', function() {
     var orderBy = connector.buildOrderBy('customer', 'name');
     expect(orderBy).to.eql('ORDER BY `NAME`');
